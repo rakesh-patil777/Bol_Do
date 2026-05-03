@@ -35,20 +35,20 @@ Respond ONLY with a JSON object:
   "spoken_text": "<The transliterated answer in English alphabet.>"
 }  
 CRITICAL: If the user asks about you, say you are "BolDo, your voice assistant."`
-    : `You are BolDo, a smart voice assistant. Analyze the user's speech and return ONLY a JSON object.
+    : `You are BolDo, a smart and helpful voice assistant. Analyze the user's speech and return ONLY a JSON object.
 The user's language is: ${expectedLang.toUpperCase()}.
 {  
-  "intent": "<recharge | send_money | help | unknown>",  
+  "intent": "<recharge | send_money | general | unknown>",  
   "language": "${expectedLang}",  
   "params": { <number, amount, operator> },  
-  "response_text": "<Confirmation in NATIVE SCRIPT. Max 2 sentences.>",
-  "spoken_text": "<Confirmation transliterated into English/Latin script.>"
+  "response_text": "<Answer or confirmation in NATIVE SCRIPT. Max 2 sentences.>",
+  "spoken_text": "<Answer or confirmation transliterated into English/Latin script.>"
 }  
 Intent Rules:
 - "recharge" -> user wants mobile top-up/recharge.
 - "send_money" -> user wants to transfer/send money/paisa.
-- "help" -> user asks a question, says "I'm lost", or "What can you do?".
-- "unknown" -> noise or unrelated talk.`;
+- "general" -> user asks a general question (e.g., "Who is the PM?", "What is 2+2?", "How are you?"). You MUST ANSWER the question directly and concisely in the response fields.
+- "unknown" -> completely unintelligible noise.`;
 
   try {
     const response = await fetch(GROQ_API_URL, {
@@ -288,7 +288,7 @@ export async function detectNavigationIntent(text: string) {
     const lower = text.toLowerCase();
     if (lower.match(/form|bharna|upload form|fill/)) return { route: 'form', response_text: 'Opening form filler.' };
     if (lower.match(/help|sahay|madad|question|chahiye/)) return { route: 'help', response_text: 'Opening help section.' };
-    if (lower.match(/image|photo|scan|tasveer|tsveer/)) return { route: 'image', response_text: 'Opening image scanner.' };
+    if (lower.match(/document|image|photo|scan|tasveer|tsveer/)) return { route: 'image', response_text: 'Opening document scanner.' };
     if (lower.match(/home|main|back|wapas|ghar/)) return { route: 'home', response_text: 'Going back to home.' };
     if (lower.match(/recharge|mobile|top.?up/)) return { route: 'recharge', response_text: 'Starting recharge.' };
     if (lower.match(/money|transfer|send|paisa|bhejo/)) return { route: 'send_money', response_text: 'Starting money transfer.' };
@@ -307,7 +307,7 @@ Analyze the user's speech and return ONLY a JSON object.
 Navigation Rules:
 - "form" -> "form bharna hai", "upload form", "application filling"
 - "help" -> "help chahiye", "how to use", "assistance"
-- "image" -> "photo scan", "upload image", "tasveer"
+- "image" -> "photo scan", "upload image", "scan document", "tasveer", "document"
 - "home" -> "wapas jao", "go back", "main menu"
 - "recharge" -> "mobile recharge", "top up"
 - "send_money" -> "transfer money", "paisa bhejo"

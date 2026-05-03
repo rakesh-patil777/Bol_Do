@@ -19,13 +19,28 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
     const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       const recog = new SpeechRecognition();
-      recog.continuous = false;
-      recog.interimResults = false;
+      recog.continuous = true; // Keep it true for better flow
+      recog.interimResults = true;
       
       recog.onresult = (event: any) => {
-        const text = event.results[0][0].transcript;
-        setTranscript(text);
-        setIsListening(false);
+        let interim = '';
+        let final = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            final += event.results[i][0].transcript;
+          } else {
+            interim += event.results[i][0].transcript;
+          }
+        }
+        
+        if (final) {
+          setTranscript(final);
+          // For one-shot command apps, we might want to stop after final
+          recog.stop();
+          setIsListening(false);
+        } else {
+          setTranscript(interim);
+        }
       };
 
       recog.onerror = (event: any) => {
@@ -70,6 +85,6 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
     startListening,
     stopListening,
     resetTranscript,
-    supported: !!recognition
+    supported: !!(window.SpeechRecognition || (window as any).webkitSpeechRecognition)
   };
 }

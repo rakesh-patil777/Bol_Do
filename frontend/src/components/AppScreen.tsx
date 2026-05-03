@@ -10,7 +10,7 @@ import ImageUpload from './ImageUpload';
 import FormFiller from './FormFiller';
 import VoiceNavigator from './VoiceNavigator';
 import HelpPage from './HelpPage';
-
+import AnimatedBackground from './AnimatedBackground';
 const LANG_MAP: Record<string, string> = {
   'english': 'en-IN',
   'hindi': 'hi-IN',
@@ -78,6 +78,7 @@ export default function AppScreen() {
   const [autoOpenFile, setAutoOpenFile] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [subMicActive, setSubMicActive] = useState(false);
+  const [assistantResponse, setAssistantResponse] = useState('');
   
   const { isListening, transcript, startListening, stopListening, resetTranscript } = useSpeechRecognition();
   const { speak, isSpeaking } = useSpeechSynthesis();
@@ -114,13 +115,17 @@ export default function AppScreen() {
       const speakLang = spoken_text ? 'en-IN' : detectedLangCode;
 
       if (intent === 'recharge') {
+        setAssistantResponse(textToSpeak);
         handleRecharge(params, textToSpeak, detectedLangCode);
       } else if (intent === 'send_money') {
+        setAssistantResponse(textToSpeak);
         handleSendMoney(params, textToSpeak, detectedLangCode);
       } else if (intent === 'help') {
+        setAssistantResponse(textToSpeak);
         handleHelp(textToSpeak, detectedLangCode);
       } else {
         // unknown or other
+        setAssistantResponse(textToSpeak);
         setStatusMessage('speaking');
         await speak(textToSpeak, speakLang);
         setStatusMessage('tapToSpeak');
@@ -130,7 +135,9 @@ export default function AppScreen() {
     } catch (error) {
       console.error(error);
       setStatusMessage('error');
-      speak('Sorry, there was a network error. Please try again.', currentLang);
+      const errorMsg = 'Sorry, there was a network error. Please try again.';
+      setAssistantResponse(errorMsg);
+      speak(errorMsg, currentLang);
       resetTranscript();
     } finally {
       setIsProcessing(false);
@@ -158,10 +165,15 @@ export default function AppScreen() {
   };
 
   const toggleListen = () => {
+    if (!supported) {
+      alert("Speech recognition is not supported in this browser. Please use Chrome or Edge.");
+      return;
+    }
     if (isListening) {
       stopListening();
     } else {
       setActionData(null);
+      setAssistantResponse('');
       resetTranscript();
       startListening(currentLang);
       setStatusMessage('listening');
@@ -181,13 +193,15 @@ export default function AppScreen() {
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundColor: '#f0f2f5', // Neutral background to make the phone pop
+      backgroundColor: '#f0f2f5',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      position: 'relative'
     }}>
-      <div className="phone-frame">
+      <AnimatedBackground />
+      <div className="phone-frame" style={{ zIndex: 10 }}>
       <AnimatePresence>
         {showImageUpload && (
           <ImageUpload 
@@ -399,13 +413,39 @@ export default function AppScreen() {
               </motion.div>
             </div>
 
-            <div style={{ height: '60px', fontSize: '1.25rem', opacity: 0.8, textAlign: 'center' }}>
-              {UI_STRINGS[currentLang]?.[statusMessage] || statusMessage}
-              {transcript && !isListening && (
-                 <div style={{ fontSize: '1rem', opacity: 0.6, marginTop: '0.5rem' }}>
-                   "{transcript}"
-                 </div>
-              )}
+            <div style={{ minHeight: '80px', padding: '0.5rem 1.5rem', width: '100%', display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
+              <div style={{ fontSize: '1.25rem', opacity: 0.8, textAlign: 'center', fontWeight: 'bold', color: 'var(--primary-dark)' }}>
+                {UI_STRINGS[currentLang]?.[statusMessage] || statusMessage}
+              </div>
+              
+              <AnimatePresence mode="wait">
+                {assistantResponse ? (
+                  <motion.div 
+                    key="response"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    style={{ fontSize: '1.15rem', color: 'var(--text-main)', textAlign: 'center', lineHeight: 1.4, maxWidth: '90%', fontWeight: 500 }}
+                  >
+                    {assistantResponse}
+                  </motion.div>
+                ) : (transcript) ? (
+                  <motion.div 
+                    key="transcript"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: isListening ? 0.8 : 0.6 }}
+                    style={{ 
+                      fontSize: '1.1rem', 
+                      textAlign: 'center', 
+                      fontStyle: 'italic',
+                      color: isListening ? 'var(--primary)' : 'var(--text-main)',
+                      fontWeight: isListening ? '600' : 'normal'
+                    }}
+                  >
+                    "{transcript}"
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
             </div>
           </>
         )}
@@ -449,7 +489,7 @@ export default function AppScreen() {
         onNavigateHelp={enterHelpMode}
         onTriggerRecharge={(text) => handleRecharge({}, text, currentLang)}
         onTriggerSendMoney={(text) => handleSendMoney({}, text, currentLang)}
-        disabled={isListening || isProcessing || isSpeaking || subMicActive || statusMessage === 'listening' || statusMessage === 'thinking'}
+        disabled={showFormFiller || showImageUpload || showHelpPage || isListening || isProcessing || isSpeaking || subMicActive || statusMessage === 'listening' || statusMessage === 'thinking'}
       />
       </div>
       </div>

@@ -56,7 +56,7 @@ export default function ImageUpload({ onClose, langCode, autoOpen }: ImageUpload
       // Small delay to ensure the modal animation has started
       const timer = setTimeout(() => {
         fileInputRef.current?.click();
-      }, 500);
+      }, 300);
       return () => clearTimeout(timer);
     }
   }, [autoOpen]);
@@ -155,7 +155,7 @@ export default function ImageUpload({ onClose, langCode, autoOpen }: ImageUpload
           </p>
           <input 
             type="file" 
-            accept="*/*" 
+            accept="image/*,application/pdf" 
             ref={fileInputRef} 
             onChange={handleFileSelect} 
             style={{ display: 'none' }} 

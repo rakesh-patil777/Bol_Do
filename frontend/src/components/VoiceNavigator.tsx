@@ -62,10 +62,12 @@ const VoiceNavigator: React.FC<VoiceNavigatorProps> = ({
   const restartTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const deadTimer    = useRef<ReturnType<typeof setTimeout> | null>(null);
   const langRef      = useRef(langCode);
+  const disabledRef  = useRef(disabled);
 
   // Keep refs in sync
   useEffect(() => { phaseRef.current = phase; }, [phase]);
   useEffect(() => { langRef.current = langCode; }, [langCode]);
+  useEffect(() => { disabledRef.current = disabled; }, [disabled]);
 
   // ── Route helper ────────────────────────────────────────────────────────────
   const executeRoute = useCallback(async (route: string | null, response: string, spokenText: string, originalText: string) => {
@@ -118,6 +120,7 @@ const VoiceNavigator: React.FC<VoiceNavigatorProps> = ({
 
   // ── Core: create & start one SpeechRecognition instance ─────────────────────
   const startListening = useCallback((expectCommand: boolean) => {
+    if (disabledRef.current) return;
     if (restartTimer.current) clearTimeout(restartTimer.current);
     if (deadTimer.current)    clearTimeout(deadTimer.current);
 
@@ -130,7 +133,8 @@ const VoiceNavigator: React.FC<VoiceNavigatorProps> = ({
     // Use continuous for watching to avoid constant restarts
     recog.continuous      = !expectCommand; 
     recog.interimResults  = true; 
-    recog.lang            = langRef.current; // Use dynamic language for better phonetic matching
+    // Use en-IN for wake-word to reliably catch 'Hey Assistant', but use the selected language for commands
+    recog.lang            = expectCommand ? langRef.current : 'en-IN'; 
 
     console.log(`[Voice] Starting SR: ${expectCommand ? 'COMMAND' : 'WAKE'} mode (${recog.lang})`);
 
@@ -147,7 +151,9 @@ const VoiceNavigator: React.FC<VoiceNavigatorProps> = ({
       } else {
         // Wake-word mode: Check the full accumulated transcript across segments
         let fullTranscript = '';
-        for (let i = 0; i < e.results.length; i++) {
+        // Only check the latest segments to prevent huge string buildup and lag
+        const startIndex = Math.max(0, e.results.length - 3);
+        for (let i = startIndex; i < e.results.length; i++) {
           fullTranscript += e.results[i][0].transcript + ' ';
         }
         
@@ -161,8 +167,8 @@ const VoiceNavigator: React.FC<VoiceNavigatorProps> = ({
     };
 
     recog.onerror = (e: any) => {
-      if (e.error === 'aborted' || e.error === 'no-speech') {
-        if (phaseRef.current === 'watching') scheduleRestart(100);
+      if (e.error === 'aborted' || e.error === 'no-speech' || e.error === 'audio-capture') {
+        if (phaseRef.current === 'watching') scheduleRestart(300);
         return;
       }
       console.error('[Voice] SR Error:', e.error);
@@ -170,7 +176,7 @@ const VoiceNavigator: React.FC<VoiceNavigatorProps> = ({
     };
 
     recog.onend = () => {
-      if (phaseRef.current === 'watching') scheduleRestart(100);
+      if (phaseRef.current === 'watching') scheduleRestart(300);
     };
 
     recogRef.current = recog;
@@ -179,11 +185,11 @@ const VoiceNavigator: React.FC<VoiceNavigatorProps> = ({
       // Heartbeat to keep it alive
       if (deadTimer.current) clearTimeout(deadTimer.current);
       deadTimer.current = setTimeout(() => {
-        if (phaseRef.current === 'watching' && !disabled) {
+        if (phaseRef.current === 'watching' && !disabledRef.current) {
           console.log('[Voice] Heartbeat restart');
           startListening(false);
         }
-      }, 15000); // 15s heartbeat
+      }, 10000); // 10s heartbeat
     } catch (err) {
       console.error('[Voice] Failed to start SR:', err);
       scheduleRestart(2000);
@@ -191,6 +197,7 @@ const VoiceNavigator: React.FC<VoiceNavigatorProps> = ({
   }, [handleCommand]); // eslint-disable-line
 
   const scheduleRestart = (delayMs: number) => {
+    if (disabledRef.current) return;
     if (restartTimer.current) clearTimeout(restartTimer.current);
     restartTimer.current = setTimeout(() => {
       if (phaseRef.current === 'watching') startListening(false);
