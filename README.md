@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/rakesh-patil777/Bol_Do/main/frontend/src/assets/app-bg.jpg" alt="BolDo Banner" width="100%" style="border-radius: 12px; margin-bottom: 20px; max-height: 400px; object-fit: cover;" />
+  <img src="https://raw.githubusercontent.com/rakesh-patil777/Bol_Do/main/frontend/src/assets/landing-preview.png" alt="BolDo Banner" width="100%" style="border-radius: 12px; margin-bottom: 20px; max-height: 400px; object-fit: cover;" />
   
   <h1>🎙️ BolDo (बोलदो)</h1>
   <p><strong>Empowering the Unread Through the Power of Voice.</strong></p>
