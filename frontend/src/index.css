@@ -1,0 +1,166 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700;900&display=swap');
+
+:root {
+  --primary: #659BB9; /* Vintage Denim */
+  --primary-light: #8BAFC4; /* Lighter Denim */
+  --primary-dark: #3a6881; /* Accessible Dark Denim for text */
+  --secondary: #487A96; /* Darker Denim */
+  --dark: #0f172a;
+  --bg-color: #FFFCEF; /* Ivory Cream */
+  --text-main: #1f2937; /* Dark text for light bg */
+  --text-muted: #4b5563; /* Darker muted text for a11y */
+  
+  /* Advanced Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  
+  /* Professional Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(101, 155, 185, 0.1), 0 4px 6px -4px rgba(101, 155, 185, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(101, 155, 185, 0.15), 0 8px 10px -6px rgba(101, 155, 185, 0.1);
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  overflow-x: hidden;
+  cursor: none; /* Hide default cursor for custom cursor */
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Accessibility Focus States */
+*:focus-visible {
+  outline: 2px solid var(--primary-dark);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Custom Cursor */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background-color: var(--primary-light);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transition: transform 0.1s ease-out;
+  transform: translate(-50%, -50%);
+}
+
+.custom-cursor-follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transition: transform 0.2s ease-out, width 0.2s, height 0.2s;
+  transform: translate(-50%, -50%);
+}
+
+.hover-target:hover ~ .custom-cursor-follower {
+  width: 60px;
+  height: 60px;
+  border-color: var(--primary);
+  background-color: rgba(79, 70, 229, 0.1);
+}
+
+/* Layout utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Glassmorphism */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-highlight), var(--shadow-lg);
+  border-radius: 24px;
+}
+
+/* Canvas container */
+.canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Typography */
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Phone Border Frame for Device Mockup Look */
+.phone-frame {
+  border: 12px solid #ffffff;
+  border-radius: 64px;
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.15), 0 18px 36px -18px rgba(0, 0, 0, 0.2);
+  margin: 12px auto;
+  height: calc(100vh - 24px);
+  width: calc(100vw - 24px);
+  max-width: 480px;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-color);
+  background-image: 
+    radial-gradient(at 100% 0%, rgba(101, 155, 185, 0.15) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(101, 155, 185, 0.1) 0px, transparent 50%);
+  box-sizing: border-box;
+}
+
+.phone-frame::after {
+  content: '';
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 5px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+@media (max-width: 480px) {
+  .phone-frame {
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    border-radius: 0;
+    border: none;
+  }
+}
