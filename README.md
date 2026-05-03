@@ -1,81 +1,105 @@
-# 🎙️ BolDo (बोलदो) - Voice-Driven Support for the Unread
+<div align="center">
+  <img src="https://raw.githubusercontent.com/rakesh-patil777/Bol_Do/main/frontend/src/assets/app-bg.jpg" alt="BolDo Banner" width="100%" style="border-radius: 12px; margin-bottom: 20px; max-height: 400px; object-fit: cover;" />
+  
+  <h1>🎙️ BolDo (बोलदो)</h1>
+  <p><strong>Empowering the Unread Through the Power of Voice.</strong></p>
 
-BolDo is a cutting-edge, voice-first assistant designed to empower non-readers and rural users in India. By leveraging advanced AI, BolDo converts visual and textual information into simple, spoken local language, helping users navigate complex documents, medicine strips, and government forms with ease.
+  [![React](https://img.shields.io/badge/React-18.2.0-blue.svg?style=for-the-badge&logo=react)](https://reactjs.org/)
+  [![Vite](https://img.shields.io/badge/Vite-5.0-646CFF.svg?style=for-the-badge&logo=vite)](https://vitejs.dev/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6.svg?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+  [![Groq](https://img.shields.io/badge/AI_Engine-Groq_Llama_3.3-f55036.svg?style=for-the-badge&logo=ai)](https://groq.com/)
+</div>
 
-![BolDo Landing Page Showcase](frontend/public/landing_preview.png) *(Note: Placeholder for actual screenshot)*
+<br/>
 
-## 🌟 Key Features
+## 🌍 The Problem
+In an increasingly digital world, millions of citizens—particularly in rural areas—are left behind due to the **literacy barrier**. Filling out complex government forms, understanding medical reports, or simply navigating a smartphone app can be an overwhelming task for non-readers. 
 
-*   **Snap & Listen**: Take a photo of any text (medicine strips, signboards, documents) and BolDo explains it aloud in a simple, conversational way.
-*   **Voice-First Navigation**: Use the "Bol Do" wake-word to navigate the app entirely by voice. No menus, no typing.
-*   **Interactive Chat Support**: A built-in AI chatbot that supports voice input and provides real-time assistance for app usage and general queries.
-*   **Auto-Form Filling**: Complex forms are broken down into simple spoken questions. BolDo captures the answers and auto-fills the fields for you.
-*   **Multilingual Support**: Natively supports Hindi, Kannada, and English with dynamic language switching.
-*   **Premium 3D Interface**: Features a stunning, interactive 3D landing page and a modern, high-contrast UI designed for clarity and ease of use.
+## 💡 Our Solution: BolDo
+**BolDo** ("Speak Up") is a revolutionary, voice-first digital assistant designed specifically for the next billion users. It completely removes the need for typing, reading, or navigating complex UI menus. **If you can speak, you can use BolDo.**
 
-## 🚀 Tech Stack
-
-*   **Frontend**: React (Vite), TypeScript
-*   **Styling**: Vanilla CSS, Framer Motion (Animations)
-*   **3D Elements**: Three.js, @react-three/fiber, @react-three/drei
-*   **AI/ML**: Groq API (Llama 3.3), Tesseract.js (OCR), Web Speech API (STT/TTS)
-*   **Navigation**: Lenis (Smooth Scrolling)
-
-## 🛠️ Getting Started
-
-### Prerequisites
-
-*   Node.js (v18+)
-*   NPM or Yarn
-*   A Groq API Key (Sign up at [groq.com](https://groq.com))
-
-### Installation
-
-1.  **Clone the repository**:
-    ```bash
-    git clone https://github.com/rakesh-patil777/Bol_Do.git
-    cd Bol_Do
-    ```
-
-2.  **Install dependencies**:
-    ```bash
-    cd frontend
-    npm install
-    ```
-
-3.  **Set up Environment Variables**:
-    Create a `.env` file in the `frontend` directory:
-    ```env
-    VITE_GROQ_API_KEY=your_api_key_here
-    ```
-
-4.  **Run the development server**:
-    ```bash
-    npm run dev
-    ```
-
-## 📂 Project Structure
-
-```text
-Bol_Do/
-├── frontend/             # React application
-│   ├── src/
-│   │   ├── components/   # UI Components (VoiceNavigator, HelpPage, etc.)
-│   │   ├── hooks/        # Custom hooks (STT, TTS, Form logic)
-│   │   ├── services/     # API services (Groq, OCR, LocalCommands)
-│   │   └── App.tsx       # Main application entry
-│   └── index.css         # Global design system
-├── files/                # Project assets and documentation
-└── README.md             # This file
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Whether it's fixing bugs, improving translations, or adding new features, feel free to open a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+By bridging cutting-edge **Generative AI (Groq + Llama 3.3)** with an ultra-accessible interface, we translate the digital world into simple, spoken local languages.
 
 ---
-*Built with ❤️ by the BolDo Team to bridge the literacy gap through voice.*
+
+## ✨ Features That Wow
+
+### 🗣️ 1. Dual-Engine Voice Assistant
+*   **"Hey Assistant" Wake-Word Navigation:** A persistent, background listener allows users to jump between app sections completely hands-free.
+*   **General Conversational AI:** A powerful, dedicated voice assistant powered by Groq's Llama-3.3-70b-versatile model that answers general knowledge questions dynamically and converses in native languages.
+
+### 📝 2. Intelligent Auto-Form Filling
+Forms are hard. BolDo makes them easy.
+*   The AI visually scans blank forms, extracts required fields, and then **interviews the user conversationally**. 
+*   *"What is your name?", "What is your date of birth?"* — BolDo listens, understands the context, and perfectly maps spoken answers to structured form data. 
+
+### 📄 3. Medical & Document Snapshot Analyzer
+*   **Snap & Listen:** Take a photo of a medicine strip, a government notice, or a hospital report.
+*   **Critical Alerts:** BolDo's AI instantly analyzes the OCR text and flags urgent information (e.g., *abnormal blood sugar levels* or *expiring prescriptions*) and translates the summary into simple, spoken Hindi, Kannada, or English.
+
+### 🎨 4. Premium, Immersive 3D Interface
+Accessibility shouldn't mean boring.
+*   BolDo features a **stunning, glassmorphism UI** with a dynamic, CSS-driven **wind-blown 3D parallax background**.
+*   Smooth framer-motion transitions, interactive floating elements, and a distraction-free mobile-first design.
+
+---
+
+## 🏗️ Technical Architecture
+
+BolDo is built for speed, resilience, and scale.
+
+*   **⚡ AI Inference:** **Groq API** running *Llama-3.3-70b-versatile* for lightning-fast, real-time voice conversations and complex intent detection.
+*   **👁️ Optical Character Recognition (OCR):** Tesseract.js integrated for entirely client-side image-to-text processing.
+*   **🎙️ Speech Engine:** Highly optimized Web Speech API wrapper for continuous STT (Speech-to-Text) with robust hardware-contention management and automatic TTS (Text-to-Speech) transliteration routing.
+*   **💻 Frontend:** React (Vite) + TypeScript.
+*   **✨ Animations:** Framer Motion & pure CSS 3D masking for ultra-smooth UI interactions.
+
+---
+
+## 🚀 How to Run Locally
+
+Get BolDo running on your machine in seconds.
+
+### Prerequisites
+* Node.js (v18+)
+* A free [Groq API Key](https://console.groq.com/keys)
+
+### Setup Instructions
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/rakesh-patil777/Bol_Do.git
+   cd Bol_Do
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+3. **Configure Environment:**
+   Create a `.env` file in the `frontend` folder and add your Groq API key:
+   ```env
+   VITE_GROQ_API_KEY=your_groq_api_key_here
+   ```
+
+4. **Launch the App:**
+   ```bash
+   npm run dev
+   ```
+   *Open `http://localhost:5173` and allow microphone access.*
+
+---
+
+## 🔮 The Future of BolDo
+We believe BolDo has the potential to become a universal accessibility layer for rural digital infrastructure. Future updates include:
+* Full offline LLM support using quantized models (Llama.cpp).
+* Integration with WhatsApp for low-bandwidth users.
+* Expanded regional language dialects (Tamil, Telugu, Marathi).
+
+<br/>
+
+<div align="center">
+  <i>Built with ❤️ to bridge the digital divide.</i>
+</div>
